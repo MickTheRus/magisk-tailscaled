@@ -41,7 +41,7 @@ export type StoredPeerProbe = PeerProbe & { statusPathAtTest: string };
 const MULLVAD_DNS_SUFFIX = 'mullvad.ts.net.';
 
 export function peerDisplayName(peer: PeerView): string {
-  return peer.HostName || peer.DNSName?.replace(/\.$/, '') || peer.TailscaleIPs?.[0] || '未知设备';
+  return peer.HostName || peer.DNSName?.replace(/\.$/, '') || peer.TailscaleIPs?.[0] || 'Unknown device';
 }
 
 export function peerStableKey(statusKey: string, peer: PeerView): string {
@@ -53,12 +53,12 @@ export function isVisiblePeer(peer: PeerView): boolean {
 }
 
 export function peerPath(peer: PeerView): PeerPath {
-  if (!peer.Online) return { kind: 'offline', label: '离线' };
-  if (!peer.Active) return { kind: 'idle', label: '在线 · 空闲' };
-  if (peer.CurAddr) return { kind: 'direct', label: `直连 ${peer.CurAddr}` };
+  if (!peer.Online) return { kind: 'offline', label: 'Offline' };
+  if (!peer.Active) return { kind: 'idle', label: 'Online · idle' };
+  if (peer.CurAddr) return { kind: 'direct', label: `Direct ${peer.CurAddr}` };
   if (peer.PeerRelay) return { kind: 'peer-relay', label: `Peer Relay ${peer.PeerRelay}` };
   if (peer.Relay) return { kind: 'relay', label: `DERP ${peer.Relay}` };
-  return { kind: 'active', label: '活动 · 路径未知' };
+  return { kind: 'active', label: 'Active · path unknown' };
 }
 
 function pingPath(via: string): { kind: ProbePathKind; label: string } {
@@ -67,9 +67,9 @@ function pingPath(via: string): { kind: ProbePathKind; label: string } {
   const relay = via.match(/^peer-relay\((.+)\)$/i);
   if (relay) return { kind: 'peer-relay', label: `Peer Relay ${relay[1]}` };
   if (/^(?:\d{1,3}\.){3}\d{1,3}:\d+$/.test(via) || /^\[[0-9a-f:]+\]:\d+$/i.test(via)) {
-    return { kind: 'direct', label: `直连 ${via}` };
+    return { kind: 'direct', label: `Direct ${via}` };
   }
-  return { kind: 'unknown', label: `路径未知（${via}）` };
+  return { kind: 'unknown', label: `Path unknown (${via})` };
 }
 
 function latencyMs(value: string): number | undefined {
@@ -97,7 +97,7 @@ export function parsePingProbe(output: string, testedAt = Date.now()): PeerProbe
   return {
     samples,
     sequence,
-    lastPath: samples[samples.length - 1]?.path || '无回复',
+    lastPath: samples[samples.length - 1]?.path || 'No reply',
     averageMs: measurable.length ? measurable.reduce((total, value) => total + value, 0) / measurable.length : undefined,
     testedAt,
     raw: output,

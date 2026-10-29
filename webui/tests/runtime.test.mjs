@@ -126,10 +126,10 @@ test('validates config imports and formats structured Netcheck summaries', () =>
   assert.deepEqual(parseRuntimeConfigImport('{"hostname":"phone","watchdogEnabled":true,"logMaxKb":2048}'), {
     hostname: 'phone', watchdogEnabled: 'true', logMaxKb: '2048',
   });
-  assert.throws(() => parseRuntimeConfigImport('{"tailscaledState":"secret"}'), /不支持字段/);
-  assert.throws(() => parseRuntimeConfigImport('[]'), /JSON 必须是对象/);
+  assert.throws(() => parseRuntimeConfigImport('{"tailscaledState":"secret"}'), /Unsupported fields/);
+  assert.throws(() => parseRuntimeConfigImport('[]'), /JSON must be an object/);
   const summary = formatNetcheckSummary({ report: { UDP: true, IPv4: true, IPv6: false, PreferredDERP: 8, RegionLatency: { hkg: 0.021 } }, warnings: '' });
-  assert.match(summary, /UDP：true/);
-  assert.match(summary, /IPv4 \/ IPv6：true \/ false/);
+  assert.match(summary, /UDP: true/);
+  assert.match(summary, /IPv4 \/ IPv6: true \/ false/);
   assert.match(summary, /hkg: 21 ms/);
 });

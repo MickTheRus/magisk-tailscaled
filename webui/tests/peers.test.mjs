@@ -12,12 +12,12 @@ new Function('module', 'exports', outputText)(module, module.exports);
 const { isVisiblePeer, parsePingProbe, parsePingResult, peerDisplayName, peerPath, peerProbeIsStale, peerStableKey } = module.exports;
 
 test('summarizes direct, DERP, peer-relay, idle and offline peers', () => {
-  assert.deepEqual(peerPath({ Online: true, Active: true, CurAddr: '1.2.3.4:5678' }), { kind: 'direct', label: '直连 1.2.3.4:5678' });
+  assert.deepEqual(peerPath({ Online: true, Active: true, CurAddr: '1.2.3.4:5678' }), { kind: 'direct', label: 'Direct 1.2.3.4:5678' });
   assert.deepEqual(peerPath({ Online: true, Active: true, Relay: 'hkg' }), { kind: 'relay', label: 'DERP hkg' });
   assert.deepEqual(peerPath({ Online: true, Active: true, PeerRelay: '100.64.0.8:40000:1' }), { kind: 'peer-relay', label: 'Peer Relay 100.64.0.8:40000:1' });
-  assert.deepEqual(peerPath({ Online: true, Active: true, CurAddr: '1.2.3.4:5678', PeerRelay: '100.64.0.8:40000:1', Relay: 'hkg' }), { kind: 'direct', label: '直连 1.2.3.4:5678' });
+  assert.deepEqual(peerPath({ Online: true, Active: true, CurAddr: '1.2.3.4:5678', PeerRelay: '100.64.0.8:40000:1', Relay: 'hkg' }), { kind: 'direct', label: 'Direct 1.2.3.4:5678' });
   assert.deepEqual(peerPath({ Online: true, Active: true, PeerRelay: '100.64.0.8:40000:1', Relay: 'hkg' }), { kind: 'peer-relay', label: 'Peer Relay 100.64.0.8:40000:1' });
-  assert.deepEqual(peerPath({ Online: true, Active: true }), { kind: 'active', label: '活动 · 路径未知' });
+  assert.deepEqual(peerPath({ Online: true, Active: true }), { kind: 'active', label: 'Active · path unknown' });
   assert.equal(peerPath({ Online: true }).kind, 'idle');
   assert.equal(peerPath({ Online: false }).kind, 'offline');
 });
@@ -41,10 +41,10 @@ test('parses latency and route from tailscale ping output', () => {
   assert.deepEqual(parsePingResult('pong from phone (100.64.0.9) via DERP(hkg) in 31ms'), {
     path: 'DERP hkg', latency: '31ms', line: 'pong from phone (100.64.0.9) via DERP(hkg) in 31ms',
   });
-  assert.equal(parsePingResult('pong from phone (100.64.0.9) via 1.2.3.4:41641 in 8ms')?.path, '直连 1.2.3.4:41641');
-  assert.equal(parsePingResult('pong from phone (100.64.0.9) via [2001:db8::1]:41641 in 9ms')?.path, '直连 [2001:db8::1]:41641');
+  assert.equal(parsePingResult('pong from phone (100.64.0.9) via 1.2.3.4:41641 in 8ms')?.path, 'Direct 1.2.3.4:41641');
+  assert.equal(parsePingResult('pong from phone (100.64.0.9) via [2001:db8::1]:41641 in 9ms')?.path, 'Direct [2001:db8::1]:41641');
   assert.equal(parsePingResult('pong from phone (100.64.0.9) via peer-relay(100.64.0.8:40000:1) in 18ms')?.path, 'Peer Relay 100.64.0.8:40000:1');
-  assert.equal(parsePingResult('pong from phone (100.64.0.9) via mystery in 22ms')?.path, '路径未知（mystery）');
+  assert.equal(parsePingResult('pong from phone (100.64.0.9) via mystery in 22ms')?.path, 'Path unknown (mystery)');
   assert.equal(parsePingResult('ping timed out'), null);
 });
 
@@ -56,9 +56,9 @@ test('parses five probes, path evolution and mixed latency units', () => {
     'pong from phone (100.64.0.9) via peer-relay(100.64.0.8:40000:1) in 0.02s',
     'pong from phone (100.64.0.9) via 1.2.3.4:41641 in 7ms',
   ].join('\n'), 1000);
-  assert.deepEqual(probe.sequence, ['DERP hkg', 'Peer Relay 100.64.0.8:40000:1', '直连 1.2.3.4:41641']);
+  assert.deepEqual(probe.sequence, ['DERP hkg', 'Peer Relay 100.64.0.8:40000:1', 'Direct 1.2.3.4:41641']);
   assert.equal(probe.samples.length, 4);
-  assert.equal(probe.lastPath, '直连 1.2.3.4:41641');
+  assert.equal(probe.lastPath, 'Direct 1.2.3.4:41641');
   assert.equal(probe.averageMs, 9.975);
   assert.equal(probe.testedAt, 1000);
 });

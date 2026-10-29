@@ -53,11 +53,11 @@ export type ShellTransport = { run(command: string, timeoutSeconds: number): Pro
 
 export function parseRuntimeConfigImport(text: string): RuntimeConfig {
   const value = JSON.parse(text) as Record<string, unknown>;
-  if (!value || Array.isArray(value) || typeof value !== 'object') throw new Error('JSON 必须是对象');
+  if (!value || Array.isArray(value) || typeof value !== 'object') throw new Error('JSON must be an object');
   const unknown = Object.keys(value).filter(key => !RUNTIME_CONFIG_KEYS.has(key as keyof RuntimeConfig));
-  if (unknown.length) throw new Error(`不支持字段：${unknown.join(', ')}`);
+  if (unknown.length) throw new Error(`Unsupported fields: ${unknown.join(', ')}`);
   const invalid = Object.entries(value).filter(([, item]) => item !== null && !['string', 'number', 'boolean'].includes(typeof item));
-  if (invalid.length) throw new Error(`字段值必须是字符串、数字或布尔值：${invalid.map(([key]) => key).join(', ')}`);
+  if (invalid.length) throw new Error(`Field values must be strings, numbers, or booleans: ${invalid.map(([key]) => key).join(', ')}`);
   return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, String(item ?? '')])) as RuntimeConfig;
 }
 
@@ -67,12 +67,12 @@ export function formatNetcheckSummary(result: NetcheckResult): string {
     ? Object.entries(report.RegionLatency as Record<string, unknown>).map(([region, seconds]) => `${region}: ${(Number(seconds) * 1000).toFixed(0)} ms`).join(' · ')
     : '-';
   return [
-    `UDP：${String(report.UDP ?? '-')}`,
-    `IPv4 / IPv6：${String(report.IPv4 ?? '-')} / ${String(report.IPv6 ?? '-')}`,
-    `NAT 映射随目标变化：${String(report.MappingVariesByDestIP ?? '-')}`,
-    `UPnP / NAT-PMP / PCP：${String(report.UPnP ?? '-')} / ${String(report.PMP ?? '-')} / ${String(report.PCP ?? '-')}`,
-    `首选 DERP：${String(report.PreferredDERP ?? '-')}`,
-    `DERP 延迟：${latency}`,
+    `UDP: ${String(report.UDP ?? '-')}`,
+    `IPv4 / IPv6: ${String(report.IPv4 ?? '-')} / ${String(report.IPv6 ?? '-')}`,
+    `NAT mapping varies by destination: ${String(report.MappingVariesByDestIP ?? '-')}`,
+    `UPnP / NAT-PMP / PCP: ${String(report.UPnP ?? '-')} / ${String(report.PMP ?? '-')} / ${String(report.PCP ?? '-')}`,
+    `Preferred DERP: ${String(report.PreferredDERP ?? '-')}`,
+    `DERP latency: ${latency}`,
   ].join('\n');
 }
 
@@ -212,13 +212,13 @@ export class RuntimeClient {
   async action(action: ActionName, options: ActionOptions = {}): Promise<ActionResult> {
     if (action === 'login' || action === 'up') return this.runBackground(action, options);
     const output = await this.checked(`sh ${HELPER} ${action}`, 25);
-    return { message: output || '操作已完成。' };
+    return { message: output || 'Operation completed.' };
   }
 
   private async runBackground(action: 'login' | 'up', options: ActionOptions): Promise<ActionResult> {
     const output = await this.checked(`sh ${HELPER} ${action}-bg`, 10);
     const operationId = output.match(/^OPERATION_ID=([^\s]+)$/m)?.[1];
-    if (!operationId) return { message: output || `${action} 操作已启动。`, background: true };
+    if (!operationId) return { message: output || `${action} operation started.`, background: true };
     const deadline = Date.now() + (action === 'login' ? 60000 : 30000);
     while (Date.now() < deadline) {
       const log = await this.log();
@@ -227,21 +227,21 @@ export class RuntimeClient {
       const urls = [...relevant.matchAll(/https?:\/\/[^\s<]+/gi)];
       const url = urls[urls.length - 1]?.[0]?.replace(/[),.;]+$/, '');
       options.onProgress?.({ log, url });
-      if (action === 'login' && url) return { message: '登录 URL 已生成；点击下方链接继续。', url, log, background: true };
+      if (action === 'login' && url) return { message: 'Login URL generated; click the link below to continue.', url, log, background: true };
       const exit = relevant.match(new RegExp(`=== OPERATION ${operationId} END exit=(\\d+) ===`));
       if (exit) {
         const ok = Number(exit[1]) === 0;
         return {
           message: ok
-            ? action === 'login' ? '登录命令已完成，未返回新 URL；设备可能已经登录。' : '配置已应用并完成连接操作。'
-            : `${action === 'login' ? '登录' : '连接'}命令失败（exit ${exit[1]}）。`,
+            ? action === 'login' ? 'Login command finished without a new URL; the device may already be logged in.' : 'Configuration applied and connect operation completed.'
+            : `${action === 'login' ? 'Login' : 'Connect'} command failed (exit ${exit[1]}).`,
           log,
         };
       }
       await wait(1000);
     }
     return {
-      message: action === 'login' ? '60 秒内未发现登录 URL。请查看最近日志或重试登录。' : '连接操作仍在后台运行，请查看最近日志。',
+      message: action === 'login' ? 'No login URL found within 60 seconds. Check the recent log or retry login.' : 'The connect operation is still running in the background; check the recent log.',
       background: true,
     };
   }

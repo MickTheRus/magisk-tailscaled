@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -13,97 +13,97 @@
       <div>
         <p class="eyebrow">ROOT NETWORK CONTROL</p>
         <h1>Magisk Tailscaled</h1>
-        <p id="updated" class="muted">正在读取状态…</p>
+        <p id="updated" class="muted">Reading status…</p>
       </div>
-      <button id="refresh" class="icon-btn" aria-label="刷新状态">↻</button>
+      <button id="refresh" class="icon-btn" aria-label="Refresh status">↻</button>
     </header>
 
     <section class="status-hero" aria-live="polite">
-      <div class="status-row"><span id="statusDot" class="status-dot pending"></span><strong id="statusLabel">正在连接</strong><span id="statusDetail" class="muted">等待 daemon</span></div>
+      <div class="status-row"><span id="statusDot" class="status-dot pending"></span><strong id="statusLabel">Connecting</strong><span id="statusDetail" class="muted">Waiting for daemon</span></div>
       <div class="hero-grid">
-        <div><span>设备 IP</span><strong id="ip">-</strong></div>
+        <div><span>Device IP</span><strong id="ip">-</strong></div>
         <div><span>Peers</span><strong id="peers">-</strong></div>
-        <div><span>本机 DERP</span><strong id="relay">-</strong></div>
+        <div><span>Local DERP</span><strong id="relay">-</strong></div>
       </div>
     </section>
 
     <section class="action-panel">
-      <div class="section-heading"><h2>快速操作</h2><span id="operation" class="operation" aria-live="polite"></span></div>
+      <div class="section-heading"><h2>Quick actions</h2><span id="operation" class="operation" aria-live="polite"></span></div>
       <div class="action-grid">
-        <button id="login" class="btn secondary">登录</button>
-        <button id="up" class="btn primary">应用并连接</button>
-        <button id="down" class="btn warning">断开</button>
-        <button id="restart" class="btn ghost">重启 daemon</button>
+        <button id="login" class="btn secondary">Log in</button>
+        <button id="up" class="btn primary">Apply and connect</button>
+        <button id="down" class="btn warning">Disconnect</button>
+        <button id="restart" class="btn ghost">Restart daemon</button>
       </div>
       <div id="loginUrlBox" class="login-url hidden">
-        <div><span>登录 URL</span><a id="loginUrl" target="_blank" rel="noreferrer"></a></div>
-        <button id="copyLoginUrl" class="text-btn">复制</button>
+        <div><span>Login URL</span><a id="loginUrl" target="_blank" rel="noreferrer"></a></div>
+        <button id="copyLoginUrl" class="text-btn">Copy</button>
       </div>
-      <div id="output" class="output" role="status">就绪。</div>
+      <div id="output" class="output" role="status">Ready.</div>
     </section>
 
     <section class="panel peer-panel">
       <div class="section-heading">
-        <div><h2>Peers</h2><span id="peerCount" class="muted">正在读取…</span></div>
-        <button id="netcheck" class="text-btn">运行 Netcheck</button>
+        <div><h2>Peers</h2><span id="peerCount" class="muted">Reading…</span></div>
+        <button id="netcheck" class="text-btn">Run Netcheck</button>
       </div>
-      <p class="hint">状态路径来自最近活动流量；按需探测不会持续运行。</p>
-      <div id="peerList" class="peer-list"><p class="hint">正在读取 Peer 状态…</p></div>
+      <p class="hint">Status paths come from recent activity traffic; on-demand probes do not run continuously.</p>
+      <div id="peerList" class="peer-list"><p class="hint">Reading Peer status…</p></div>
       <div class="diagnostic-box">
-        <pre id="netcheckSummary" class="output small" aria-live="polite">尚未运行 Netcheck。</pre>
-        <details><summary>原始 Netcheck JSON</summary><pre id="netcheckRaw" class="output small">-</pre></details>
+        <pre id="netcheckSummary" class="output small" aria-live="polite">Netcheck has not been run.</pre>
+        <details><summary>Raw Netcheck JSON</summary><pre id="netcheckRaw" class="output small">-</pre></details>
       </div>
     </section>
 
     <section class="panel health-panel">
-      <div class="section-heading"><h2>健康中心</h2><div class="inline-actions"><button id="healthCheck" class="text-btn">运行健康检查</button><button id="copyReport" class="text-btn">复制脱敏报告</button></div></div>
-      <div id="healthGrid" class="health-grid"><p class="hint">按需检查 daemon、Backend、TUN、SELinux、配置、watchdog 与日志。</p></div>
+      <div class="section-heading"><h2>Health center</h2><div class="inline-actions"><button id="healthCheck" class="text-btn">Run health check</button><button id="copyReport" class="text-btn">Copy redacted report</button></div></div>
+      <div id="healthGrid" class="health-grid"><p class="hint">Check daemon, Backend, TUN, SELinux, config, watchdog, and logs on demand.</p></div>
     </section>
 
     <details class="panel" open>
-      <summary>常用网络选项</summary>
+      <summary>Common network options</summary>
       <div class="checks">
-        <label class="switch-row"><span>禁用 Tailscale DNS<small>Android 通常更兼容</small></span><input id="acceptDns" type="checkbox"><i></i></label>
-        <label class="switch-row"><span>接受子网路由</span><input id="acceptRoutes" type="checkbox"><i></i></label>
-        <label class="switch-row"><span>启用 Tailscale SSH</span><input id="tailscaleSsh" type="checkbox"><i></i></label>
-        <label class="switch-row"><span>将本机作为出口节点</span><input id="advertiseExitNode" type="checkbox"><i></i></label>
-        <label class="switch-row"><span>出口节点允许局域网</span><input id="allowLan" type="checkbox"><i></i></label>
+        <label class="switch-row"><span>Disable Tailscale DNS<small>Usually more compatible on Android</small></span><input id="acceptDns" type="checkbox"><i></i></label>
+        <label class="switch-row"><span>Accept subnet routes</span><input id="acceptRoutes" type="checkbox"><i></i></label>
+        <label class="switch-row"><span>Enable Tailscale SSH</span><input id="tailscaleSsh" type="checkbox"><i></i></label>
+        <label class="switch-row"><span>Advertise this device as an exit node</span><input id="advertiseExitNode" type="checkbox"><i></i></label>
+        <label class="switch-row"><span>Allow LAN access via exit node</span><input id="allowLan" type="checkbox"><i></i></label>
         <label class="switch-row"><span>Shields-up</span><input id="shieldsUp" type="checkbox"><i></i></label>
       </div>
-      <label>使用出口节点<select id="exitNode"><option value="">不使用 / 清除</option></select></label>
-      <p class="hint">出口节点来自当前 tailnet 中声明了 ExitNodeOption 的设备。</p>
+      <label>Use exit node<select id="exitNode"><option value="">None / clear</option></select></label>
+      <p class="hint">Exit nodes are devices in the current tailnet that advertise ExitNodeOption.</p>
     </details>
 
     <details class="panel">
-      <summary>设备与启动</summary>
-      <label class="switch-row"><span>开机自动启动</span><input id="startOnBoot" type="checkbox"><i></i></label>
-      <label class="switch-row"><span>崩溃自动恢复<small>Watchdog 默认关闭；主动停止不会拉起</small></span><input id="watchdogEnabled" type="checkbox"><i></i></label>
+      <summary>Device and startup</summary>
+      <label class="switch-row"><span>Start on boot</span><input id="startOnBoot" type="checkbox"><i></i></label>
+      <label class="switch-row"><span>Crash recovery<small>Watchdog is off by default; a manual stop is not restarted</small></span><input id="watchdogEnabled" type="checkbox"><i></i></label>
       <label>Control server URL<input id="loginServer" type="url" inputmode="url" placeholder="https://headscale.example.com"></label>
-      <label>设备名称<input id="hostname" placeholder="可选"></label>
-      <label>单份日志上限（KB）<input id="logMaxKb" type="number" inputmode="numeric" min="128" max="10240" step="128" value="1024"></label>
+      <label>Device name<input id="hostname" placeholder="Optional"></label>
+      <label>Per-log size limit (KB)<input id="logMaxKb" type="number" inputmode="numeric" min="128" max="10240" step="128" value="1024"></label>
     </details>
 
     <details class="panel">
-      <summary>配置复制与导入</summary>
-      <p class="hint">只含 WebUI 管理字段；不含节点状态、节点密钥、SSH 私钥或证书。</p>
-      <textarea id="configTransfer" class="config-transfer" placeholder="导出后显示 JSON，或粘贴 JSON 后导入预览"></textarea>
-      <div class="inline-actions"><button id="exportConfig" class="btn ghost">复制配置</button><button id="importConfig" class="btn secondary">导入到表单</button></div>
+      <summary>Copy and import config</summary>
+      <p class="hint">Only WebUI-managed fields; no node state, node keys, SSH private keys, or certificates.</p>
+      <textarea id="configTransfer" class="config-transfer" placeholder="JSON appears here after export, or paste JSON to preview an import"></textarea>
+      <div class="inline-actions"><button id="exportConfig" class="btn ghost">Copy config</button><button id="importConfig" class="btn secondary">Import into form</button></div>
     </details>
 
     <details class="panel">
-      <summary>高级参数</summary>
-      <label>生成的 tailscale up 参数<input id="upArgs" readonly></label>
-      <label>额外 up 参数<input id="extraUpArgs" placeholder="例如 --advertise-tags=tag:phone"></label>
-      <label>tailscaled daemon 参数<input id="daemonArgs" placeholder="-no-logs-no-support"></label>
-      <p class="warning-text">高级参数仅允许安全 token；不要粘贴命令、分号或 shell 表达式。</p>
+      <summary>Advanced arguments</summary>
+      <label>Generated tailscale up arguments<input id="upArgs" readonly></label>
+      <label>Extra up arguments<input id="extraUpArgs" placeholder="e.g. --advertise-tags=tag:phone"></label>
+      <label>tailscaled daemon arguments<input id="daemonArgs" placeholder="-no-logs-no-support"></label>
+      <p class="warning-text">Advanced arguments only accept safe tokens; do not paste commands, semicolons, or shell expressions.</p>
     </details>
 
     <section class="panel log-panel">
-      <div class="section-heading"><h2>最近日志</h2><button id="refreshLog" class="text-btn">刷新日志</button></div>
-      <pre id="log" class="output small">正在读取…</pre>
+      <div class="section-heading"><h2>Recent log</h2><button id="refreshLog" class="text-btn">Refresh log</button></div>
+      <pre id="log" class="output small">Reading…</pre>
     </section>
 
-    <div id="saveBar" class="sticky-save clean" aria-hidden="true"><span id="dirty" class="hint">有未保存修改</span><button id="save" class="btn primary">保存配置</button></div>
+    <div id="saveBar" class="sticky-save clean" aria-hidden="true"><span id="dirty" class="hint">Unsaved changes</span><button id="save" class="btn primary">Save config</button></div>
   </main>
   <script type="module" src="app.ts"></script>
 </body>
