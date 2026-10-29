@@ -10,7 +10,7 @@ fi
 
 CURRENT=$(grep '^version=' module.prop | cut -d'=' -f2 | tr -d 'v')
 IFS='.' read -r MAJOR MINOR PATCH BUILD <<< "$CURRENT"
-ORIGIN_URL=$(git config --get remote.origin.url 2>/dev/null || echo "https://github.com/NightWatcher314/magisk-tailscaled.git")
+ORIGIN_URL=$(git config --get remote.origin.url 2>/dev/null || echo "https://github.com/MickTheRus/magisk-tailscaled.git")
 REPO_SLUG=$(printf '%s' "$ORIGIN_URL" | sed -E 's#^git@github.com:##; s#^https://github.com/##; s#\.git$##')
 DEFAULT_BRANCH=$(git remote show origin 2>/dev/null | awk -F': ' '/HEAD branch/ { print $2; exit }')
 DEFAULT_BRANCH="${DEFAULT_BRANCH:-main}"

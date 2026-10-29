@@ -1,3 +1,10 @@
+## v2.4.1.0
+
+- Translate the WebUI (all labels, status messages, errors, and Peer/health/Netcheck text) from Chinese to English and set the page language to `en`.
+- Translate the v2.4 runtime reliability PRD to English.
+- Update WebUI build dependencies to clear `npm audit` advisories in `brace-expansion`, `browserslist`, and `js-yaml`.
+- Publish update metadata from `MickTheRus/magisk-tailscaled`.
+
 ## v2.4.0.3
 
 - Fix false configuration failures under KernelSU Next's `ASH_STANDALONE=1` BusyBox shell by avoiding redirected shell-builtin output in validation and explicitly propagating validation errors.

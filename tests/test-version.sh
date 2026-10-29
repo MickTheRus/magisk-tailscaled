@@ -13,7 +13,7 @@ grep -Fx "## $TAG" CHANGELOG.md >/dev/null
 for file in update.json update-arm.json update-arm64.json; do
   jq -e --arg tag "$TAG" --arg code "$CODE" '
     .version == $tag and .versionCode == $code and
-    .zipUrl == ("https://github.com/NightWatcher314/magisk-tailscaled/releases/download/" + $tag + "/Magisk-Tailscaled-" + $tag + ".zip") and
-    .changelog == "https://raw.githubusercontent.com/NightWatcher314/magisk-tailscaled/main/CHANGELOG.md"
+    .zipUrl == ("https://github.com/MickTheRus/magisk-tailscaled/releases/download/" + $tag + "/Magisk-Tailscaled-" + $tag + ".zip") and
+    .changelog == "https://raw.githubusercontent.com/MickTheRus/magisk-tailscaled/main/CHANGELOG.md"
   ' "$file" >/dev/null
 done
